@@ -1,6 +1,8 @@
 {
   "watch": ["server/**/*.ts"],
+  "ignore": [".git", "node_modules/**/node_modules"],
   "execMap": {
-    "ts": "rimraf production-server && tsc --project tsconfig.json && copyfiles -f \"server/mail/*.html\" production-server/mail && node production-server/server.js"
+    "ts1": "rimraf production-server && tsc --project tsconfig.json && copyfiles -f \"server/mail/*.html\" production-server/mail && node production-server/server.js",
+    "ts": "node --nolazy -r ts-node/register --max-http-header-size 15000"
   }
 }

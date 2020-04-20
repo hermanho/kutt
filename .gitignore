@@ -1,5 +1,5 @@
 .env
-.vscode/
+.env.**
 client/.next/
 node_modules/
 client/config.js
@@ -11,3 +11,4 @@ production-server
 dump.rdb
 docs/api/*.js
 docs/api/static
+/.vscode/settings.json
