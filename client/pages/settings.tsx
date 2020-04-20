@@ -13,7 +13,7 @@ import Footer from "../components/Footer";
 import { useStoreState } from "../store";
 
 const SettingsPage: NextPage = () => {
-  const email = useStoreState(s => s.auth.email);
+  const email = useStoreState((s) => s.auth.email);
 
   return (
     <AppWrapper>

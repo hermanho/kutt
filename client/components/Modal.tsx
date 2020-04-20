@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const Modal: FC<Props> = ({ children, id, show, closeHandler, ...rest }) => {
   if (!show) return null;
 
-  const onClickOutside = e => {
+  const onClickOutside = (e) => {
     if (e.target.id === id) closeHandler();
   };
 

@@ -8,10 +8,10 @@ export interface Loading {
 
 export const loading: Loading = {
   loading: false,
-  show: action(state => {
+  show: action((state) => {
     state.loading = true;
   }),
-  hide: action(state => {
+  hide: action((state) => {
     state.loading = false;
   })
 };

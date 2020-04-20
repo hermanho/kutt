@@ -1,6 +1,6 @@
 import { keyframes } from "styled-components";
 
-export const fadeInVertical = vertical => keyframes`
+export const fadeInVertical = (vertical) => keyframes`
   from {
     opacity: 0;
     transform: translateY(${vertical});

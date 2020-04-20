@@ -20,7 +20,7 @@ interface Props {
 
 const ChartArea: FC<Props> = ({ data: rawData, period }) => {
   const now = new Date();
-  const getDate = index => {
+  const getDate = (index) => {
     switch (period) {
       case "allTime":
         return formatDate(

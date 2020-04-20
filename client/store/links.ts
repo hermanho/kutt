@@ -126,7 +126,7 @@ export const links: Links = {
     state.total = payload.total;
   }),
   update: action((state, payload) => {
-    state.items = state.items.map(item =>
+    state.items = state.items.map((item) =>
       item.id === payload.id ? { ...item, ...payload } : item
     );
   }),

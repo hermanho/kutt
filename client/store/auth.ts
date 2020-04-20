@@ -21,13 +21,13 @@ export const auth: Auth = {
   domain: null,
   email: null,
   isAdmin: false,
-  isAuthenticated: computed(s => !!s.email),
+  isAuthenticated: computed((s) => !!s.email),
   add: action((state, payload) => {
     state.domain = payload.domain;
     state.email = payload.sub;
     state.isAdmin = payload.admin;
   }),
-  logout: action(state => {
+  logout: action((state) => {
     cookie.remove("token");
     state.domain = null;
     state.email = null;
@@ -40,7 +40,7 @@ export const auth: Auth = {
     const tokenPayload: TokenPayload = decode(token);
     actions.add(tokenPayload);
   }),
-  renew: thunk(async actions => {
+  renew: thunk(async (actions) => {
     const res = await axios.post(APIv2.AuthRenew, null, getAxiosConfig());
     const { token } = res.data;
     cookie.set("token", token, { expires: 7 });

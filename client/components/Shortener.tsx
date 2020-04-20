@@ -57,9 +57,9 @@ interface Form {
 const defaultDomain = process.env.DEFAULT_DOMAIN;
 
 const Shortener = () => {
-  const { isAuthenticated } = useStoreState(s => s.auth);
-  const domains = useStoreState(s => s.settings.domains);
-  const submit = useStoreActions(s => s.links.submit);
+  const { isAuthenticated } = useStoreState((s) => s.auth);
+  const domains = useStoreState((s) => s.settings.domains);
+  const submit = useStoreActions((s) => s.links.submit);
   const [link, setLink] = useState<Link | null>(null);
   const [message, setMessage] = useMessage(3000);
   const [loading, setLoading] = useState(false);
@@ -92,7 +92,7 @@ const Shortener = () => {
     setLoading(false);
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setCopied(false);
@@ -222,7 +222,7 @@ const Shortener = () => {
       <Checkbox
         {...raw({
           name: "showAdvanced",
-          onChange: e => {
+          onChange: (e) => {
             if (!isAuthenticated) {
               setMessage(
                 "You need to log in or sign up to use advanced options."
@@ -259,7 +259,7 @@ const Shortener = () => {
               width={[170, 200]}
               options={[
                 { key: defaultDomain, value: "" },
-                ...domains.map(d => ({
+                ...domains.map((d) => ({
                   key: d.address,
                   value: d.address
                 }))

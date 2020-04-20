@@ -32,8 +32,8 @@ const Email = styled.span`
 `;
 
 const LoginPage = () => {
-  const { isAuthenticated } = useStoreState(s => s.auth);
-  const login = useStoreActions(s => s.auth.login);
+  const { isAuthenticated } = useStoreState((s) => s.auth);
+  const login = useStoreActions((s) => s.auth.login);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [loading, setLoading] = useState({ login: false, signup: false });
@@ -47,7 +47,7 @@ const LoginPage = () => {
   }, [isAuthenticated]);
 
   function onSubmit(type: "login" | "signup") {
-    return async e => {
+    return async (e) => {
       e.preventDefault();
       const { email, password } = formState.values;
 
@@ -68,7 +68,7 @@ const LoginPage = () => {
       setError("");
 
       if (type === "login") {
-        setLoading(s => ({ ...s, login: true }));
+        setLoading((s) => ({ ...s, login: true }));
         try {
           await login(formState.values);
           Router.push("/");
@@ -78,7 +78,7 @@ const LoginPage = () => {
       }
 
       if (type === "signup") {
-        setLoading(s => ({ ...s, signup: true }));
+        setLoading((s) => ({ ...s, signup: true }));
         try {
           await axios.post(APIv2.AuthSignup, { email, password });
           setVerifying(true);

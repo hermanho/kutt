@@ -46,7 +46,7 @@ const Map: FC<Props> = ({ data }) => {
   const [mostVisits] = data.sort((a, b) => (b.value - a.value > 0 ? 1 : -1));
   return (
     <>
-      {world.layers.map(layer => (
+      {world.layers.map((layer) => (
         <Tooltip
           key={layer.id}
           type="light"
@@ -54,7 +54,7 @@ const Map: FC<Props> = ({ data }) => {
           id={`${layer.id}-tooltip-country`}
         >
           {layer.name}:{" "}
-          {data.find(d => d.name.toLowerCase() === layer.id)?.value || 0}
+          {data.find((d) => d.name.toLowerCase() === layer.id)?.value || 0}
         </Tooltip>
       ))}
       <Svg
@@ -62,14 +62,14 @@ const Map: FC<Props> = ({ data }) => {
         aria-label="world map"
         viewBox={world.viewBox}
       >
-        {world.layers.map(layer => (
+        {world.layers.map((layer) => (
           <path
             key={layer.id}
             data-tip
             data-for={`${layer.id}-tooltip-country`}
             className={`country-${Math.ceil(
-              ((data.find(d => d.name.toLowerCase() === layer.id)?.value || 0) /
-                mostVisits?.value || 0) * 6
+              ((data.find((d) => d.name.toLowerCase() === layer.id)?.value ||
+                0) / mostVisits?.value || 0) * 6
             )}`}
             aria-label={layer.name}
             d={layer.d}

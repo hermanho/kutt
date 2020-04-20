@@ -51,7 +51,7 @@ export const settings: Settings = {
     actions.setSettings(res.data);
     getStoreActions().loading.hide();
   }),
-  generateApiKey: thunk(async actions => {
+  generateApiKey: thunk(async (actions) => {
     const res = await axios.post(
       APIv2.AuthGenerateApikey,
       null,
@@ -76,7 +76,7 @@ export const settings: Settings = {
     state.domains.push(payload);
   }),
   removeDomain: action((state, id) => {
-    state.domains = state.domains.filter(d => d.id !== id);
+    state.domains = state.domains.filter((d) => d.id !== id);
   }),
   saveDomain: thunk(async (actions, payload) => {
     const res = await axios.post(APIv2.Domains, payload, getAxiosConfig());

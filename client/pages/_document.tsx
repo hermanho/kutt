@@ -11,7 +11,7 @@ interface Props {
 class AppDocument extends Document<Props> {
   static getInitialProps({ renderPage }) {
     const sheet = new ServerStyleSheet();
-    const page = renderPage(App => props =>
+    const page = renderPage((App) => (props) =>
       sheet.collectStyles(<App {...props} />)
     );
     const styleTags = sheet.getStyleElement();

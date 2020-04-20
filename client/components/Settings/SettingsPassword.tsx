@@ -20,7 +20,7 @@ const SettingsPassword: FC = () => {
     { withIds: true }
   );
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     if (!formState.validity.password) {
@@ -61,7 +61,7 @@ const SettingsPassword: FC = () => {
         <TextInput
           {...password({
             name: "password",
-            validate: value => {
+            validate: (value) => {
               const val = value.trim();
               if (!val || val.length < 8) {
                 return "Password must be at least 8 chars.";

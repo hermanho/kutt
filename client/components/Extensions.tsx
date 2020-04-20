@@ -62,7 +62,7 @@ const Icon = styled(SVG)`
   width: 18px;
   height: 18px;
   margin-right: 16px;
-  fill: ${props => props.color || "#333"};
+  fill: ${(props) => props.color || "#333"};
 
   @media only screen and (max-width: 768px) {
     width: 13px;

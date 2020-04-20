@@ -17,7 +17,7 @@ const ReportPage = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useMessage(5000);
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage();
