@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import env from "./env";
 
 import asyncHandler from "express-async-handler";
@@ -17,7 +18,7 @@ import routes from "./routes";
 import * as utils from "./utils";
 
 import "./cron";
-import "./passport";
+import "./passport-config";
 
 if (env.RAVEN_DSN) {
   Raven.config(env.RAVEN_DSN).install();
@@ -47,6 +48,18 @@ app.prepare().then(async () => {
   server.use(helpers.ip);
 
   server.use(asyncHandler(links.redirectCustomDomain));
+
+  server.get("/auth/login-aad", asyncHandler(auth.azuread));
+  server.post(
+    "/auth/openid/return-azuread",
+    asyncHandler(auth.azuread),
+    function (req, res) {
+      const token = utils.signToken(req.user);
+      //7 days
+      res.cookie("token", token, { maxAge: 604800 });
+      res.redirect("/");
+    }
+  );
 
   server.use("/api/v2", routes);
   server.use("/api", __v1Routes);

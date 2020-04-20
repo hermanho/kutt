@@ -1,3 +1,6 @@
+/// <reference types="express" />
+/// <reference types="passport" />
+
 type Raw = import("knex").Raw;
 
 type Match<T> = {
@@ -19,6 +22,17 @@ interface User {
   verification_expires?: string;
   verification_token?: string;
   verified?: boolean;
+}
+
+interface UserSSO {
+  id: number;
+  provider: string;
+  object_id: string;
+  access_token: string;
+  refresh_token: string;
+  created_at: string;
+  updated_at: string;
+  user_id?: number;
 }
 
 interface UserJoined extends User {

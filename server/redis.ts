@@ -30,7 +30,8 @@ export const key = {
   domain: (address: string) => `d-${address}`,
   stats: (link_id: number) => `s-${link_id}`,
   host: (address: string) => `h-${address}`,
-  user: (emailOrKey: string) => `u-${emailOrKey}`
+  user: (emailOrKey: string) => `u-${emailOrKey}`,
+  user_sso: (object_id: string) => `u-sso-${object_id}`
 };
 
 export const remove = {
@@ -50,5 +51,9 @@ export const remove = {
     if (!user) return;
     del(key.user(user.email));
     del(key.user(user.apikey));
+  },
+  user_sso: (user_sso?: UserSSO) => {
+    if (!user_sso) return;
+    del(key.user_sso(user_sso.object_id));
   }
 };

@@ -12,7 +12,7 @@ import { ColCenterV } from "../components/Layout";
 import AppWrapper from "../components/AppWrapper";
 import { TextInput } from "../components/Input";
 import { fadeIn } from "../helpers/animations";
-import { Button } from "../components/Button";
+import { Button, MSButton } from "../components/Button";
 import Text, { H2 } from "../components/Text";
 import ALink from "../components/ALink";
 import Icon from "../components/Icon";
@@ -32,8 +32,8 @@ const Email = styled.span`
 `;
 
 const LoginPage = () => {
-  const { isAuthenticated } = useStoreState(s => s.auth);
-  const login = useStoreActions(s => s.auth.login);
+  const { isAuthenticated } = useStoreState((s) => s.auth);
+  const login = useStoreActions((s) => s.auth.login);
   const [error, setError] = useState("");
   const [verifying, setVerifying] = useState(false);
   const [loading, setLoading] = useState({ login: false, signup: false });
@@ -47,7 +47,7 @@ const LoginPage = () => {
   }, [isAuthenticated]);
 
   function onSubmit(type: "login" | "signup") {
-    return async e => {
+    return async (e) => {
       e.preventDefault();
       const { email, password } = formState.values;
 
@@ -68,7 +68,7 @@ const LoginPage = () => {
       setError("");
 
       if (type === "login") {
-        setLoading(s => ({ ...s, login: true }));
+        setLoading((s) => ({ ...s, login: true }));
         try {
           await login(formState.values);
           Router.push("/");
@@ -78,7 +78,7 @@ const LoginPage = () => {
       }
 
       if (type === "signup") {
-        setLoading(s => ({ ...s, signup: true }));
+        setLoading((s) => ({ ...s, signup: true }));
         try {
           await axios.post(APIv2.AuthSignup, { email, password });
           setVerifying(true);
@@ -88,6 +88,15 @@ const LoginPage = () => {
       }
 
       setLoading({ login: false, signup: false });
+    };
+  }
+
+  function signAAD() {
+    return async (e) => {
+      e.preventDefault();
+      setError("");
+      setLoading((s) => ({ ...s, login: true }));
+      Router.push(APIv2.AuthLoginAAD_Server);
     };
   }
 
@@ -160,6 +169,18 @@ const LoginPage = () => {
                 />
                 Sign up
               </Button>
+              <MSButton
+                flex="1 1 auto"
+                mr={["8px", 16]}
+                height={[41, 55]}
+                onClick={signAAD()}
+              >
+                <Flex m={12}>
+                  <img src="/images/ms-symbollockup_mssymbol_19.png" alt="" />
+                </Flex>
+                Sign in with Microsoft
+                {loading.login && <Icon name="spinner" stroke="white" mr={2} />}
+              </MSButton>
             </Flex>
             <Link href="/reset-password">
               <ALink

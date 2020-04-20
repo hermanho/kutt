@@ -67,7 +67,12 @@ const env = cleanEnv(process.env, {
   MAIL_PASSWORD: str(),
   REPORT_EMAIL: str({ default: "" }),
   CONTACT_EMAIL: str({ default: "" }),
-  RAVEN_DSN: str({ default: "" })
+  RAVEN_DSN: str({ default: "" }),
+  AZUREAD_CLIENTID: str(),
+  AZUREAD_CLIENTSECRET: str(),
+  AZUREAD_COOKIE_EN_KEY: str(),
+  AZUREAD_COOKIE_EN_IV: str(),
+  AZUREAD_TENANTID: str()
 });
 
 export default env;

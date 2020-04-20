@@ -17,3 +17,7 @@ declare module "next" {
     store: ReturnType<typeof initializeStore>;
   }
 }
+
+interface ParamsDictionary {
+  [key: string]: string;
+}

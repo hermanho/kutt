@@ -116,3 +116,55 @@ NavButton.defaultProps = {
   px: ["6px", "8px"],
   fontSize: [12]
 };
+
+interface MSButtonProps extends BoxProps {
+  color?: "dark" | "light";
+  disabled?: boolean;
+  icon?: string; // TODO: better typing
+  onClick?: any; // TODO: better typing
+  type?: "button" | "submit" | "reset";
+}
+
+export const MSButton = styled(Flex)<MSButtonProps>`
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  font-family: Segoe UI Regular;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1;
+  word-break: keep-all;
+  color: ${switchProp(prop("color", "dark"), {
+    dark: "#ffffff",
+    light: "#5e5e5e"
+  })};
+  background: ${switchProp(prop("color", "dark"), {
+    dark: "#2f2f2f",
+    light: "#ffffff"
+  })};
+  border: ${switchProp(prop("color", "dark"), {
+    dark: "none",
+    light: "1px #8c8c8c"
+  })};
+  transition: all 0.4s ease-out;
+  cursor: pointer;
+  overflow: hidden;
+
+  :hover,
+  :focus {
+    outline: none;
+    transform: translateY(-2px) scale(1.02, 1.02);
+  }
+`;
+
+MSButton.defaultProps = {
+  as: "button",
+  width: "auto",
+  flex: "0 0 auto",
+  height: [36, 40],
+  py: 0,
+  px: [24, 32],
+  fontSize: [16, 20],
+  color: "dark",
+  icon: ""
+};

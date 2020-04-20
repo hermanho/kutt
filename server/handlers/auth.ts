@@ -15,30 +15,40 @@ import * as redis from "../redis";
 import env from "../env";
 
 const authenticate = (
-  type: "jwt" | "local" | "localapikey",
+  type:
+    | "jwt"
+    | "local"
+    | "localapikey"
+    | "azuread-openidconnect"
+    | "oauth-bearer",
   error: string,
-  isStrict = true
+  isStrict = true,
+  options = null
 ) =>
   async function auth(req, res, next) {
     if (req.user) return next();
 
-    passport.authenticate(type, (err, user) => {
+    return passport.authenticate(type, options, (err, user, info, status) => {
       if (err) return next(err);
 
       if (!user && isStrict) {
-        throw new CustomError(error, 401);
+        return next(new CustomError(error, 401));
       }
 
       if (user && isStrict && !user.verified) {
-        throw new CustomError(
-          "Your email address is not verified. " +
-            "Click on signup to get the verification link again.",
-          400
+        return next(
+          new CustomError(
+            "Your email address is not verified. " +
+              "Click on signup to get the verification link again.",
+            400
+          )
         );
       }
 
       if (user && user.banned) {
-        throw new CustomError("Your are banned from using this website.", 403);
+        return next(
+          new CustomError("Your are banned from using this website.", 403)
+        );
       }
 
       if (user) {
@@ -59,6 +69,18 @@ export const apikey = authenticate(
   "localapikey",
   "API key is not correct.",
   false
+);
+export const azuread = authenticate(
+  "azuread-openidconnect",
+  "Login fail with Azure AD",
+  true,
+  { failureRedirect: "/", tenantIdOrName: env.AZUREAD_TENANTID }
+);
+export const azuread_bearer = authenticate(
+  "oauth-bearer",
+  "Login fail with Azure AD",
+  true,
+  { failureRedirect: "/", tenantIdOrName: env.AZUREAD_TENANTID }
 );
 
 export const cooldown: Handler = async (req, res, next) => {
