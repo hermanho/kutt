@@ -1,14 +1,7 @@
 import { Strategy as LocalAPIKeyStrategy } from "passport-localapikey-update";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as LocalStratergy } from "passport-local";
-import {
-  OIDCStrategy,
-  IProfile,
-  IBearerStrategyOptionWithRequest,
-  BearerStrategy,
-  ITokenPayload,
-  VerifyCallback
-} from "passport-azure-ad";
+import { OIDCStrategy, IProfile, VerifyCallback } from "passport-azure-ad";
 import passport from "passport";
 import bcrypt from "bcryptjs";
 
