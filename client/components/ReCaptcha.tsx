@@ -1,9 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Flex } from 'reflexbox/styled-components';
+import React from "react";
+import styled from "styled-components";
+import { Flex } from "reflexbox/styled-components";
 
 const ReCaptcha = () => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (
+    !process.env.RECAPTCHA_SITE_KEY &&
+    process.env.NODE_ENV !== "production"
+  ) {
     return null;
   }
 

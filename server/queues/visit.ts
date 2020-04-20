@@ -1,18 +1,17 @@
 import useragent from "useragent";
 import geoip from "geoip-lite";
-import URL from "url";
 
 import query from "../queries";
 import { getStatsLimit } from "../utils";
 
 const browsersList = ["IE", "Firefox", "Chrome", "Opera", "Safari", "Edge"];
 const osList = ["Windows", "Mac OS", "Linux", "Android", "iOS"];
-const filterInBrowser = agent => item =>
+const filterInBrowser = (agent) => (item) =>
   agent.family.toLowerCase().includes(item.toLocaleLowerCase());
-const filterInOs = agent => item =>
+const filterInOs = (agent) => (item) =>
   agent.os.family.toLowerCase().includes(item.toLocaleLowerCase());
 
-export default function({ data }) {
+export default function ({ data }) {
   const tasks = [];
 
   tasks.push(query.link.increamentVisit({ id: data.link.id }));
@@ -21,7 +20,7 @@ export default function({ data }) {
     const agent = useragent.parse(data.headers["user-agent"]);
     const [browser = "Other"] = browsersList.filter(filterInBrowser(agent));
     const [os = "Other"] = osList.filter(filterInOs(agent));
-    const referrer = data.referrer && URL.parse(data.referrer).hostname;
+    const referrer = data.referrer && new URL(data.referrer).hostname;
     const location = geoip.lookup(data.realIP);
     const country = location && location.country;
     tasks.push(

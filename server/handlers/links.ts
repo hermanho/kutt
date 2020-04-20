@@ -4,7 +4,6 @@ import { promisify } from "util";
 import bcrypt from "bcryptjs";
 import isbot from "isbot";
 import next from "next";
-import URL from "url";
 import dns from "dns";
 
 import * as validators from "./validators";
@@ -26,9 +25,18 @@ export const get: Handler = async (req, res) => {
     ...(!all && { user_id: userId })
   };
 
+  const limit_int = parseInt(limit.toString());
+  const skip_int = parseInt(skip.toString());
+
   const [links, total] = await Promise.all([
-    query.link.get(match, { limit, search, skip }),
-    query.link.total(match, { search })
+    query.link.get(match, {
+      limit: limit_int,
+      search: search.toString(),
+      skip: skip_int
+    }),
+    query.link.total(match, {
+      search: search.toString()
+    })
   ]);
 
   const data = links.map(utils.sanitize.link);
@@ -45,7 +53,7 @@ export const create: Handler = async (req: CreateLinkReq, res) => {
   const { reuse, password, customurl, target, domain } = req.body;
   const domain_id = domain ? domain.id : null;
 
-  const targetDomain = URL.parse(target).hostname;
+  const targetDomain = new URL(target).hostname;
 
   const queries = await Promise.all([
     validators.cooldown(req.user),
@@ -114,7 +122,7 @@ export const edit: Handler = async (req, res) => {
     throw new CustomError("Link was not found.");
   }
 
-  const targetDomain = URL.parse(target).hostname;
+  const targetDomain = new URL(target).hostname;
   const domain_id = link.domain_id;
 
   const queries = await Promise.all([
@@ -207,7 +215,7 @@ export const ban: Handler = async (req, res) => {
   // 2. Ban link
   tasks.push(query.link.update({ uuid: id }, update));
 
-  const domain = URL.parse(link.target).hostname;
+  const domain = new URL(link.target).hostname;
 
   // 3. Ban target's domain
   if (req.body.domain) {
@@ -249,7 +257,7 @@ export const redirect = (app: ReturnType<typeof next>): Handler => async (
 ) => {
   const isBot = isbot(req.headers["user-agent"]);
   const isPreservedUrl = validators.preservedUrls.some(
-    item => item === req.path.replace("/", "")
+    (item) => item === req.path.replace("/", "")
   );
 
   if (isPreservedUrl) return next();
@@ -271,7 +279,7 @@ export const redirect = (app: ReturnType<typeof next>): Handler => async (
   // 3. When no link, if has domain redirect to domain's homepage
   // otherwise rediredt to 404
   if (!link) {
-    return res.redirect(301, domain ? domain.homepage : "/404");
+    return res.redirect(302, domain ? domain.homepage : "/404");
   }
 
   // 4. If link is banned, redirect to banned page.
@@ -372,15 +380,15 @@ export const redirectCustomDomain: Handler = async (req, res, next) => {
   if (
     path === "/" ||
     validators.preservedUrls
-      .filter(l => l !== "url-password")
-      .some(item => item === path.replace("/", ""))
+      .filter((l) => l !== "url-password")
+      .some((item) => item === path.replace("/", ""))
   ) {
     const domain = await query.domain.find({ address: host });
     const redirectURL = domain
       ? domain.homepage
       : `https://${env.DEFAULT_DOMAIN + path}`;
 
-    return res.redirect(301, redirectURL);
+    return res.redirect(302, redirectURL);
   }
 
   return next();

@@ -23,7 +23,7 @@ const ProtectedPage: NextPage<Props> = () => {
   const [formState, { password }] = useFormState<{ password: string }>();
   const [error, setError] = useState<string>();
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const { password } = formState.values;
 

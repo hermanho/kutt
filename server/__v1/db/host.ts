@@ -13,9 +13,7 @@ export const getHost = async (data: Partial<Host>) => {
 
   if (cachedHost) return JSON.parse(cachedHost);
 
-  const host = await knex<Host>("hosts")
-    .where(getData)
-    .first();
+  const host = await knex<Host>("hosts").where(getData).first();
 
   if (host) {
     redis.set(redisKey, JSON.stringify(host), "EX", 60 * 60 * 6);
@@ -27,18 +25,14 @@ export const getHost = async (data: Partial<Host>) => {
 export const banHost = async (addressToBan: string, banned_by_id?: number) => {
   const address = addressToBan.toLowerCase();
 
-  const currentHost = await knex<Host>("hosts")
-    .where({ address })
-    .first();
+  const currentHost = await knex<Host>("hosts").where({ address }).first();
 
   if (currentHost) {
-    await knex<Host>("hosts")
-      .where({ address })
-      .update({
-        banned: true,
-        banned_by_id,
-        updated_at: new Date().toISOString()
-      });
+    await knex<Host>("hosts").where({ address }).update({
+      banned: true,
+      banned_by_id,
+      updated_at: new Date().toISOString()
+    });
   } else {
     await knex<Host>("hosts").insert({ address, banned: true, banned_by_id });
   }

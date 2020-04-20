@@ -6,7 +6,6 @@ import { promisify } from "util";
 import urlRegex from "url-regex";
 import axios from "axios";
 import dns from "dns";
-import URL from "url";
 
 import { addProtocol, CustomError } from "../../utils";
 import { addCooldown, banUser } from "../db/user";
@@ -83,7 +82,7 @@ export const validateUrl: RequestHandler = async (req, res, next) => {
     return res.status(400).json({ error: "URL is not valid." });
 
   // If target is the URL shortener itself
-  const { host } = URL.parse(addProtocol(req.body.target));
+  const { host } = new URL(addProtocol(req.body.target));
   if (host === env.DEFAULT_DOMAIN) {
     return res
       .status(400)
@@ -103,7 +102,7 @@ export const validateUrl: RequestHandler = async (req, res, next) => {
     }
 
     // Prevent from using preserved URLs
-    if (preservedUrls.some(url => url === req.body.customurl)) {
+    if (preservedUrls.some((url) => url === req.body.customurl)) {
       return res
         .status(400)
         .json({ error: "You can't use this custom URL name." });
@@ -126,7 +125,7 @@ export const cooldownCheck = async (user: User) => {
       await banUser(user.id);
       throw new Error("Too much malware requests. You are banned.");
     }
-    const hasCooldownNow = user.cooldowns.some(cooldown =>
+    const hasCooldownNow = user.cooldowns.some((cooldown) =>
       isAfter(subHours(new Date(), 12), new Date(cooldown))
     );
     if (hasCooldownNow) {

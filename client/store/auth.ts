@@ -3,7 +3,6 @@ import decode from "jwt-decode";
 import cookie from "js-cookie";
 import axios from "axios";
 
-import { TokenPayload } from "../types";
 import { API, APIv2 } from "../consts";
 import { getAxiosConfig } from "../utils";
 

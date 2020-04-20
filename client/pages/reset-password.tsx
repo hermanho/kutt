@@ -13,7 +13,6 @@ import { TextInput } from "../components/Input";
 import { Button } from "../components/Button";
 import Text, { H2 } from "../components/Text";
 import { Col } from "../components/Layout";
-import { TokenPayload } from "../types";
 import { useMessage } from "../hooks";
 import Icon from "../components/Icon";
 import { API, APIv2 } from "../consts";
@@ -23,8 +22,8 @@ interface Props {
 }
 
 const ResetPassword: NextPage<Props> = ({ token }) => {
-  const auth = useStoreState(s => s.auth);
-  const addAuth = useStoreActions(s => s.auth.add);
+  const auth = useStoreState((s) => s.auth);
+  const addAuth = useStoreActions((s) => s.auth.add);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useMessage();
   const [formState, { email, label }] = useFormState<{ email: string }>(null, {
@@ -44,7 +43,7 @@ const ResetPassword: NextPage<Props> = ({ token }) => {
     }
   }, []);
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (!formState.validity.email) return;
 
@@ -103,7 +102,7 @@ const ResetPassword: NextPage<Props> = ({ token }) => {
   );
 };
 
-ResetPassword.getInitialProps = async ctx => {
+ResetPassword.getInitialProps = async (ctx) => {
   return { token: ctx.req && (ctx.req as any).token };
 };
 

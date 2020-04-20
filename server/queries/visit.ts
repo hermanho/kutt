@@ -60,25 +60,10 @@ export const add = async (params: Add) => {
   return visit;
 };
 
-interface StatsResult {
-  stats: {
-    browser: { name: string; value: number }[];
-    os: { name: string; value: number }[];
-    country: { name: string; value: number }[];
-    referrer: { name: string; value: number }[];
-  };
-  views: number[];
-}
-
-interface IGetStatsResponse {
-  allTime: StatsResult;
-  lastDay: StatsResult;
-  lastMonth: StatsResult;
-  lastWeek: StatsResult;
-  updatedAt: string;
-}
-
-export const find = async (match: Partial<Visit>, total: number) => {
+export const find = async (
+  match: Partial<Visit>,
+  total: number
+): Promise<IVisitGetStatsResponse> => {
   if (match.link_id) {
     const key = redis.key.stats(match.link_id);
     const cached = await redis.get(key);
@@ -104,9 +89,7 @@ export const find = async (match: Partial<Visit>, total: number) => {
     }
   };
 
-  const visitsStream: any = knex<Visit>("visits")
-    .where(match)
-    .stream();
+  const visitsStream: any = knex<Visit>("visits").where(match).stream();
   const nowUTC = utils.getUTCDate();
   const now = new Date();
 
@@ -215,7 +198,7 @@ export const find = async (match: Partial<Visit>, total: number) => {
     stats.allTime.views[index] = view + visit.total;
   }
 
-  const response: IGetStatsResponse = {
+  const response = {
     allTime: {
       stats: utils.statsObjectToArray(stats.allTime.stats),
       views: stats.allTime.views

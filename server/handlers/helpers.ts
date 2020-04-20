@@ -13,7 +13,7 @@ export const ip: Handler = (req, res, next) => {
 };
 
 export const error: ErrorRequestHandler = (error, req, res, next) => {
-  if (env.isDev) {
+  if (process.env.NODE_ENV === "development") {
     signale.fatal(error);
   }
 
@@ -43,14 +43,15 @@ export const query: Handler = (req, res, next) => {
   const { limit, skip, all } = req.query;
   const { admin } = req.user || {};
 
-  req.query.limit = parseInt(limit) || 10;
-  req.query.skip = parseInt(skip) || 0;
+  let limit_int = parseInt(limit.toString()) || 10;
+  req.query.skip = (parseInt(skip.toString()) || 0).toString();
 
-  if (req.query.limit > 50) {
-    req.query.limit = 50;
+  if (limit_int > 50) {
+    limit_int = 50;
   }
 
-  req.query.all = admin ? all === "true" : false;
+  req.query.limit = limit_int.toString();
+  req.query.all = (admin ? all === "true" : false).toString();
 
   next();
 };

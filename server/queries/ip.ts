@@ -6,18 +6,14 @@ import env from "../env";
 export const add = async (ipToAdd: string) => {
   const ip = ipToAdd.toLowerCase();
 
-  const currentIP = await knex<IP>("ips")
-    .where("ip", ip)
-    .first();
+  const currentIP = await knex<IP>("ips").where("ip", ip).first();
 
   if (currentIP) {
     const currentDate = new Date().toISOString();
-    await knex<IP>("ips")
-      .where({ ip })
-      .update({
-        created_at: currentDate,
-        updated_at: currentDate
-      });
+    await knex<IP>("ips").where({ ip }).update({
+      created_at: currentDate,
+      updated_at: currentDate
+    });
   } else {
     await knex<IP>("ips").insert({ ip });
   }

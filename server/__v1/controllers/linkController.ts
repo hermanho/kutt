@@ -2,9 +2,8 @@ import bcrypt from "bcryptjs";
 import dns from "dns";
 import { Handler } from "express";
 import isbot from "isbot";
-import generate from "nanoid/generate";
+import { customAlphabet } from "nanoid";
 import ua from "universal-analytics";
-import URL from "url";
 import urlRegex from "url-regex";
 import { promisify } from "util";
 import { deleteDomain, getDomain, setDomain } from "../db/domain";
@@ -35,10 +34,10 @@ import queue from "../../queues";
 const dnsLookup = promisify(dns.lookup);
 
 const generateId = async () => {
-  const address = generate(
+  const address = customAlphabet(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
     env.LINK_LENGTH
-  );
+  )();
   const link = await findLink({ address });
   if (!link) return address;
   return generateId();
@@ -47,7 +46,7 @@ const generateId = async () => {
 export const shortener: Handler = async (req, res) => {
   try {
     const target = addProtocol(req.body.target);
-    const targetDomain = URL.parse(target).hostname;
+    const targetDomain = new URL(target).hostname;
 
     const queries = await Promise.all([
       env.GOOGLE_SAFE_BROWSING_KEY && cooldownCheck(req.user),
@@ -128,7 +127,7 @@ export const goToLink: Handler = async (req, res, next) => {
   if (!link) {
     if (host !== env.DEFAULT_DOMAIN) {
       if (!domain || !domain.homepage) return next();
-      return res.redirect(301, domain.homepage);
+      return res.redirect(302, domain.homepage);
     }
     return next();
   }
@@ -201,7 +200,7 @@ export const getUserLinks: Handler = async (req, res) => {
 };
 
 export const setCustomDomain: Handler = async (req, res) => {
-  const parsed = URL.parse(req.body.customDomain);
+  const parsed = new URL(req.body.customDomain);
   const customDomain = parsed.hostname || parsed.href;
   if (!customDomain)
     return res.status(400).json({ error: "Domain is not valid." });
@@ -220,7 +219,7 @@ export const setCustomDomain: Handler = async (req, res) => {
     return res.status(400).json({ error: "Homepage is not valid." });
   const homepage =
     req.body.homepage &&
-    (URL.parse(req.body.homepage).protocol
+    (new URL(req.body.homepage).protocol
       ? req.body.homepage
       : `http://${req.body.homepage}`);
   const matchedDomain = await getDomain({ address: customDomain });
@@ -263,12 +262,12 @@ export const customDomainRedirection: Handler = async (req, res, next) => {
     headers.host !== env.DEFAULT_DOMAIN &&
     (path === "/" ||
       preservedUrls
-        .filter(l => l !== "url-password")
-        .some(item => item === path.replace("/", "")))
+        .filter((l) => l !== "url-password")
+        .some((item) => item === path.replace("/", "")))
   ) {
     const domain = await getDomain({ address: headers.host });
     return res.redirect(
-      301,
+      302,
       (domain && domain.homepage) || `https://${env.DEFAULT_DOMAIN + path}`
     );
   }
@@ -300,10 +299,11 @@ export const getLinkStats: Handler = async (req, res) => {
     return res.status(400).json({ error: "No id has been provided." });
   }
 
-  const { hostname } = URL.parse(req.query.domain);
+  const { hostname } = new URL(req.query.domain.toString());
   const hasCustomDomain = req.query.domain && hostname !== env.DEFAULT_DOMAIN;
   const customDomain = hasCustomDomain
-    ? (await getDomain({ address: req.query.domain })) || ({ id: -1 } as Domain)
+    ? (await getDomain({ address: req.query.domain.toString() })) ||
+      ({ id: -1 } as Domain)
     : ({} as Domain);
 
   const redisKey = req.query.id + (customDomain.address || "") + req.user.email;
@@ -311,7 +311,7 @@ export const getLinkStats: Handler = async (req, res) => {
   if (cached) return res.status(200).json(JSON.parse(cached));
 
   const link = await findLink({
-    address: req.query.id,
+    address: req.query.id.toString(),
     domain_id: hasCustomDomain ? customDomain.id : null,
     user_id: req.user && req.user.id
   });
@@ -338,7 +338,7 @@ export const reportLink: Handler = async (req, res) => {
     return res.status(400).json({ error: "No URL has been provided." });
   }
 
-  const { hostname } = URL.parse(req.body.link);
+  const { hostname } = new URL(req.body.link);
   if (hostname !== env.DEFAULT_DOMAIN) {
     return res.status(400).json({
       error: `You can only report a ${env.DEFAULT_DOMAIN} link`
@@ -374,7 +374,7 @@ export const ban: Handler = async (req, res) => {
     return res.status(200).json({ message: "Link was banned already." });
   }
 
-  const domain = URL.parse(link.target).hostname;
+  const domain = new URL(link.target).hostname;
 
   let host;
   if (req.body.host) {

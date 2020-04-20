@@ -13,7 +13,7 @@ const neo4j = NEO4J.driver(
   NEO4J.auth.basic(env.NEO4J_DB_USERNAME, env.NEO4J_DB_PASSWORD)
 );
 
-(async function() {
+(async function () {
   const startTime = Date.now();
 
   const nodes = [

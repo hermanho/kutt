@@ -9,7 +9,6 @@ import AppWrapper from "../components/AppWrapper";
 import { Button } from "../components/Button";
 import { useStoreActions } from "../store";
 import { Col } from "../components/Layout";
-import { TokenPayload } from "../types";
 import Icon from "../components/Icon";
 import { NextPage } from "next";
 import { Colors } from "../consts";

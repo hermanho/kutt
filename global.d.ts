@@ -138,13 +138,42 @@ interface Stats {
   referrer: Record<string, number>;
 }
 
+interface StatsResult {
+  stats: {
+    browser: { name: string; value: number }[];
+    os: { name: string; value: number }[];
+    country: { name: string; value: number }[];
+    referrer: { name: string; value: number }[];
+  };
+  views: number[];
+}
+
+interface IVisitGetStatsResponse {
+  allTime: StatsResult;
+  lastDay: StatsResult;
+  lastMonth: StatsResult;
+  lastWeek: StatsResult;
+  updatedAt: string;
+}
+
+interface ILinkGetStatsResponse extends IVisitGetStatsResponse {
+  id: string;
+  shortLink: string;
+  shortUrl: string;
+  target: string;
+  total: number;
+}
+
+interface ILinkAPIResponse extends IVisitGetStatsResponse, LinkSanitized {}
+
 declare namespace Express {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface User extends UserJoined {}
   export interface Request {
     realIP?: string;
     pageType?: string;
     linkTarget?: string;
     protectedLink?: string;
     token?: string;
-    user: UserJoined;
   }
 }

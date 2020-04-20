@@ -6,15 +6,33 @@
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": ["./tsconfig.json", "./client/tsconfig.json"]
+    "ecmaVersion": 6,
+    "project": [
+      "./tsconfig.json",
+      "./client/tsconfig.json"
+    ]
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint",
+    "node"
+  ],
   "rules": {
-    "eqeqeq": ["warn", "always", { "null": "ignore" }],
+    "eqeqeq": [
+      "warn",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
     "no-useless-return": "warn",
     "no-var": "warn",
     "no-console": "warn",
-    "max-len": ["warn", { "comments": 80 }],
+    "max-len": [
+      "warn",
+      {
+        "comments": 80
+      }
+    ],
     "no-param-reassign": 0,
     "require-atomic-updates": 0,
     "@typescript-eslint/interface-name-prefix": "off",
@@ -24,7 +42,9 @@
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-object-literal-type-assertion": "off",
     "@typescript-eslint/no-parameter-properties": "off",
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "node/process-exit-as-throw": "error",
+    "node/no-deprecated-api": "error"
   },
   "env": {
     "es6": true,

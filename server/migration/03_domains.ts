@@ -22,7 +22,7 @@ const postgres = knex({
   }
 });
 
-(async function() {
+(async function () {
   const startTime = Date.now();
 
   // 3. [NEO4J] Get all domain
@@ -39,10 +39,7 @@ const postgres = knex({
 
           // 4. [Postgres] Get user ID
           const user =
-            email &&
-            (await postgres<User>("users")
-              .where({ email })
-              .first());
+            email && (await postgres<User>("users").where({ email }).first());
 
           // 5. [Postgres] Upsert domains
           const banned = !!domain.banned;

@@ -11,9 +11,7 @@ export const find = async (match: Partial<User>) => {
     if (cachedUser) return JSON.parse(cachedUser) as User;
   }
 
-  const user = await knex<User>("users")
-    .where(match)
-    .first();
+  const user = await knex<User>("users").where(match).first();
 
   if (user) {
     const emailKey = redis.key.user(user.email);
@@ -75,9 +73,7 @@ export const update = async (match: Match<User>, update: Partial<User>) => {
 };
 
 export const remove = async (user: User) => {
-  const deletedUser = await knex<User>("users")
-    .where("id", user.id)
-    .delete();
+  const deletedUser = await knex<User>("users").where("id", user.id).delete();
 
   redis.remove.user(user);
 

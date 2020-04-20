@@ -1,4 +1,5 @@
 .env
 .git
+**/.next
 node_modules
 production-server

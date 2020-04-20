@@ -7,9 +7,7 @@ export const find = async (match: Partial<Domain>): Promise<Domain> => {
     if (cachedDomain) return JSON.parse(cachedDomain);
   }
 
-  const domain = await knex<Domain>("domains")
-    .where(match)
-    .first();
+  const domain = await knex<Domain>("domains").where(match).first();
 
   if (domain) {
     redis.set(

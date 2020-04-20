@@ -22,7 +22,7 @@ const postgres = knex({
   }
 });
 
-(async function() {
+(async function () {
   const startTime = Date.now();
 
   // 3. [NEO4J] Get all users
@@ -61,9 +61,7 @@ const postgres = knex({
             })
             .first();
           if (exists) {
-            await postgres<User>("users")
-              .where("id", exists.id)
-              .update(data);
+            await postgres<User>("users").where("id", exists.id).update(data);
           } else {
             await postgres<User>("users").insert(data);
           }

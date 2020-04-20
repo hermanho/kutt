@@ -27,7 +27,7 @@ const postgres = knex({
   }
 });
 
-(async function() {
+(async function () {
   const startTime = Date.now();
 
   // 3. [NEO4J] Get all links
@@ -114,14 +114,9 @@ const postgres = knex({
 
                   // 5. [Postgres] Find matching user and or domain
                   const [user, domain] = await Promise.all([
-                    email &&
-                      postgres<User>("users")
-                        .where({ email })
-                        .first(),
+                    email && postgres<User>("users").where({ email }).first(),
                     address &&
-                      postgres<Domain>("domains")
-                        .where({ address })
-                        .first()
+                      postgres<Domain>("domains").where({ address }).first()
                   ]);
 
                   // 6. [Postgres] Create link
@@ -174,8 +169,9 @@ const postgres = knex({
                   queue.add(() => {
                     const endTime = Date.now();
                     console.log(
-                      `✅ Done! It took ${(endTime - startTime) /
-                        1000} seconds.`
+                      `✅ Done! It took ${
+                        (endTime - startTime) / 1000
+                      } seconds.`
                     );
                   });
                 }

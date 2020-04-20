@@ -1,4 +1,4 @@
-export interface TokenPayload {
+interface TokenPayload {
   iss: "ApiAuth";
   sub: string;
   domain: string;

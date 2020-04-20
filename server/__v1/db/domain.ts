@@ -14,9 +14,7 @@ export const getDomain = async (data: Partial<Domain>): Promise<Domain> => {
 
   if (cachedDomain) return JSON.parse(cachedDomain);
 
-  const domain = await knex<Domain>("domains")
-    .where(getData)
-    .first();
+  const domain = await knex<Domain>("domains").where(getData).first();
 
   if (domain) {
     redis.set(redisKey, JSON.stringify(domain), "EX", 60 * 60 * 6);

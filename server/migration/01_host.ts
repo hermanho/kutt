@@ -22,7 +22,7 @@ const postgres = knex({
   }
 });
 
-(async function() {
+(async function () {
   const startTime = Date.now();
 
   // 3. [NEO4J] Get all hosts

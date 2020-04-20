@@ -8,7 +8,6 @@ import React from "react";
 
 import { initGA, logPageView } from "../helpers/analytics";
 import { initializeStore } from "../store";
-import { TokenPayload } from "../types";
 import AppWrapper from "../components/AppWrapper";
 
 const isProd = process.env.NODE_ENV === "production";

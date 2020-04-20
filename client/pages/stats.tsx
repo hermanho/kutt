@@ -23,10 +23,10 @@ interface Props {
 }
 
 const StatsPage: NextPage<Props> = ({ id }) => {
-  const { isAuthenticated } = useStoreState(s => s.auth);
+  const { isAuthenticated } = useStoreState((s) => s.auth);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState<ILinkAPIResponse>();
   const [period, setPeriod] = useState("lastDay");
 
   const stats = data && data[period];
@@ -88,10 +88,7 @@ const StatsPage: NextPage<Props> = ({ id }) => {
               </H1>
               <Text fontSize={[13, 14]} textAlign="right">
                 {data.target.length > 80
-                  ? `${data.target
-                      .split("")
-                      .slice(0, 80)
-                      .join("")}...`
+                  ? `${data.target.split("").slice(0, 80).join("")}...`
                   : data.target}
               </Text>
             </Flex>
@@ -111,7 +108,7 @@ const StatsPage: NextPage<Props> = ({ id }) => {
                 px={[3, 4]}
               >
                 <H4>
-                  Total clicks: <Span bold>{data.total}</Span>
+                  Total clicks: <Span bold>{data.visit_count}</Span>
                 </H4>
                 <Flex>
                   {[

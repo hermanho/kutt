@@ -140,17 +140,13 @@ export const create = async (params: Create) => {
 };
 
 export const remove = async (match: Partial<Link>) => {
-  const link = await knex<Link>("links")
-    .where(match)
-    .first();
+  const link = await knex<Link>("links").where(match).first();
 
   if (!link) {
     throw new CustomError("Link was not found.");
   }
 
-  const deletedLink = await knex<Link>("links")
-    .where("id", link.id)
-    .delete();
+  const deletedLink = await knex<Link>("links").where("id", link.id).delete();
 
   redis.remove.link(link);
 
@@ -168,7 +164,5 @@ export const update = async (match: Partial<Link>, update: Partial<Link>) => {
 };
 
 export const increamentVisit = async (match: Partial<Link>) => {
-  return knex<Link>("links")
-    .where(match)
-    .increment("visit_count", 1);
+  return knex<Link>("links").where(match).increment("visit_count", 1);
 };

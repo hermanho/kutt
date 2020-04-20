@@ -49,9 +49,7 @@ export const createShortLink = async (data: CreateLink, user: UserJoined) => {
 };
 
 export const addLinkCount = async (id: number) => {
-  return knex<Link>("links")
-    .where({ id })
-    .increment("visit_count", 1);
+  return knex<Link>("links").where({ id }).increment("visit_count", 1);
 };
 
 interface ICreateVisit {
@@ -209,7 +207,7 @@ export const getLinks = async (
     "domains.id"
   );
 
-  const links = matchedLinks.map(link => ({
+  const links = matchedLinks.map((link) => ({
     ...link,
     id: link.address,
     password: !!link.password,
@@ -227,13 +225,16 @@ interface IDeleteLink {
 }
 
 export const deleteLink = async (data: IDeleteLink) => {
+  const whereObj = {
+    "links.address": data.address,
+    "links.user_id": data.user_id
+  };
+  if (!data.domain) {
+    whereObj["domain_id"] = null;
+  }
   const link: LinkJoinedDomain = await knex<LinkJoinedDomain>("links")
     .select("links.id", "domains.address as domain")
-    .where({
-      "links.address": data.address,
-      "links.user_id": data.user_id,
-      ...(!data.domain && { domain_id: null })
-    })
+    .where(whereObj)
     .leftJoin("domains", "links.domain_id", "domains.id")
     .first();
 
@@ -243,13 +244,9 @@ export const deleteLink = async (data: IDeleteLink) => {
     return;
   }
 
-  await knex<Visit>("visits")
-    .where("link_id", link.id)
-    .delete();
+  await knex<Visit>("visits").where("link_id", link.id).delete();
 
-  const deletedLink = await knex<Link>("links")
-    .where("id", link.id)
-    .delete();
+  const deletedLink = await knex<Link>("links").where("id", link.id).delete();
 
   redis.del(getRedisKey.link(link.address, link.domain_id, link.user_id));
 
@@ -259,16 +256,6 @@ export const deleteLink = async (data: IDeleteLink) => {
 /*
  ** Collecting stats
  */
-
-interface StatsResult {
-  stats: {
-    browser: { name: string; value: number }[];
-    os: { name: string; value: number }[];
-    country: { name: string; value: number }[];
-    referrer: { name: string; value: number }[];
-  };
-  views: number[];
-}
 
 const getInitStats = (): Stats =>
   Object.create({
@@ -298,19 +285,6 @@ const STATS_PERIODS: [number, "lastDay" | "lastWeek" | "lastMonth"][] = [
   [7, "lastWeek"],
   [30, "lastMonth"]
 ];
-
-interface IGetStatsResponse {
-  allTime: StatsResult;
-  id: string;
-  lastDay: StatsResult;
-  lastMonth: StatsResult;
-  lastWeek: StatsResult;
-  shortLink: string;
-  shortUrl: string;
-  target: string;
-  total: number;
-  updatedAt: string;
-}
 
 export const getStats = async (link: Link, domain: Domain) => {
   const stats = {
@@ -443,7 +417,7 @@ export const getStats = async (link: Link, domain: Domain) => {
     stats.allTime.views[index] = view + visit.total;
   }
 
-  const response: IGetStatsResponse = {
+  const response: ILinkGetStatsResponse = {
     allTime: {
       stats: statsObjectToArray(stats.allTime.stats),
       views: stats.allTime.views
