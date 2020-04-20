@@ -15,6 +15,7 @@ COPY . .
 # Give permission to run script
 RUN chmod +x ./wait-for-it.sh
 
+ENV NODE_ENV=development
 # Build files
 RUN npm run build
 
