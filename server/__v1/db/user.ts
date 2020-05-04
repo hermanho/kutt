@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
-import uuid from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 import { addMinutes } from "date-fns";
 
 import knex from "../../knex";
@@ -53,7 +53,7 @@ export const createUser = async (
   const data = {
     email,
     password: hashedPassword,
-    verification_token: uuid(),
+    verification_token: uuidv4(),
     verification_expires: addMinutes(new Date(), 60).toISOString()
   };
 
@@ -127,7 +127,7 @@ export const generateApiKey = async (id: number) => {
 
 export const requestPasswordReset = async (emailToMatch: string) => {
   const email = emailToMatch.toLowerCase();
-  const reset_password_token = uuid();
+  const reset_password_token = uuidv4();
 
   const [user]: User[] = await knex<User>("users")
     .where({ email })

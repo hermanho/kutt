@@ -3,7 +3,7 @@ import { Handler } from "express";
 import passport from "passport";
 import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
-import uuid from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
 import { CustomError } from "../utils";
@@ -188,7 +188,7 @@ export const resetPasswordRequest = async (req, res) => {
   const [user] = await query.user.update(
     { email: req.body.email },
     {
-      reset_password_token: uuid(),
+      reset_password_token: uuidv4(),
       reset_password_expires: addMinutes(new Date(), 30).toISOString()
     }
   );

@@ -1,4 +1,4 @@
-import uuid from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
 import { addMinutes } from "date-fns";
 
 import * as redis from "../redis";
@@ -35,7 +35,7 @@ export const add = async (params: Add, user?: User) => {
   const data = {
     email: params.email,
     password: params.password,
-    verification_token: uuid(),
+    verification_token: uuidv4(),
     verification_expires: addMinutes(new Date(), 60).toISOString()
   };
 

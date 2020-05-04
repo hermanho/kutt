@@ -14,6 +14,8 @@ const dotenvFiles = [
   path_dotenv
 ].filter(Boolean);
 
+console.log(dotenvFiles);
+
 // Load environment variables from .env* files. Suppress warnings using silent
 // if this file is missing. dotenv will never modify any environment variables
 // that have already been set.  Variable expansion is supported in .env files.

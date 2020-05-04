@@ -14,7 +14,6 @@ import * as links from "./handlers/links";
 import * as auth from "./handlers/auth";
 import __v1Routes from "./__v1";
 import routes from "./routes";
-import * as utils from "./utils";
 
 import "./cron";
 import "./passport";
