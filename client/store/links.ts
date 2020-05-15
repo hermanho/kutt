@@ -63,6 +63,7 @@ export interface Links {
   items: Link[];
   total: number;
   loading: boolean;
+  refreshKey: number;
   submit: Thunk<Links, NewLink>;
   get: Thunk<Links, LinksQuery>;
   add: Action<Links, Link>;
@@ -72,6 +73,7 @@ export interface Links {
   edit: Thunk<Links, EditLink>;
   ban: Thunk<Links, BanLink>;
   setLoading: Action<Links, boolean>;
+  setRefreshKey: Action<Links>;
 }
 
 export const links: Links = {
@@ -79,12 +81,14 @@ export const links: Links = {
   items: [],
   total: 0,
   loading: true,
+  refreshKey: 0,
   submit: thunk(async (actions, payload) => {
     const data = Object.fromEntries(
       Object.entries(payload).filter(([, value]) => value !== "")
     );
     const res = await axios.post(APIv2.Links, data, getAxiosConfig());
     actions.add(res.data);
+    actions.setRefreshKey();
     return res.data;
   }),
   get: thunk(async (actions, payload) => {
@@ -118,7 +122,6 @@ export const links: Links = {
     actions.update(res.data);
   }),
   add: action((state, payload) => {
-    state.items.pop();
     state.items.unshift(payload);
   }),
   set: action((state, payload) => {
@@ -132,5 +135,8 @@ export const links: Links = {
   }),
   setLoading: action((state, payload) => {
     state.loading = payload;
+  }),
+  setRefreshKey: action((state) => {
+    state.refreshKey++;
   })
 };

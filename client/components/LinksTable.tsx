@@ -447,7 +447,7 @@ const LinksTable: FC = () => {
     get(options).catch(err =>
       setTableMessage(err?.response?.data?.error || "An error occurred.")
     );
-  }, [options.limit, options.skip, options.all]);
+  }, [options.limit, options.skip, options.all, links.refreshKey]);
 
   const onSubmit = e => {
     e.preventDefault();
